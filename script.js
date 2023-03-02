@@ -59,3 +59,32 @@ async function getWeatherDetailsByLATandLONG(){
         console.log("Errror Found" , err);
     }
 }
+ 
+
+
+function switchTab(clickedTab){
+    
+    if(clickedTab !== currentTab){
+        //remove all css properties from current tab
+        currentTab.classList.remove("current-tab");
+        //put current tab equal to clicked tab
+        currentTab = clickedTab ;
+        //add all properties of currentab
+        currentTab.classList.add("current-tab");
+    }
+}
+
+  function showLATandLONG(){
+    let latitude = position.coords.latitude; //to get coordinates of latitude
+    let longitude = position.coords.longitude; //to get coordinates of longitudes
+
+  }
+
+  function getLocation (){
+    if(navigator.geolocation) { //it give access to location of devices
+        navigator.geolocation.getCurrentPosition(showPosition);
+    }
+    else {
+        console.log("No geoLocation Support");
+    }
+  }
