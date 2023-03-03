@@ -10,6 +10,7 @@
 <body>
     <div class="wrapper">
 
+        <!-- heading -->
         <h1>WEATHER APP</h1>
 
         <div class="tab-container">
@@ -17,7 +18,7 @@
             <p class="tab" data-searchWeather>Search Weather</p>
         </div>
 
-        <div>
+        
 
 
             <!--info container-->
@@ -26,7 +27,7 @@
                 <!-- grant location access container -->
                 <div class="grant-location-container">
                     <img src="./assets/location.png" alt="" width="80" height="80" loading="lazy">
-                    <p>Gramnt Location Access</p>
+                    <p>Grant Location Access</p>
                     <p>Allow Access to get weather Inforamtioin </p>
                     <button class="btn" data-grantAccess >Grant Access</button>
                 </div>
@@ -37,63 +38,107 @@
 
                 <form class="form-container" data-searchform>
                 <input type="text" placeholder="Search for City..." data-searchInput>
-                
-                 <button><img src="assets/search.png" width="80" height="80" loading="lazy"> </button>
+                 <button><img src="assets/search.png" width="20" height="20" loading="lazy"> </button>
 
                 </form>
 
 
+                <!-- loading screen container -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                <div class="loading-container">
+                    <img src="assets/loading.gif" width="150" height="150" alt="">
+                    <p>Loading</p>
+                </div>
 
                 
-                <!-- <p>Palam</p>
-                <img src="" alt="">
-            </div>
 
-            <div>Haze</div>
+                <!-- show weather info -->
+                 <div class="user-info-container">
 
-            <img src="" alt="">
 
-            <p></p>
+                    <!-- city name and flag -->
+                    <div class="name">
+                        <p data-cityName ></p>
+                        <img data-countryIcon>
+                    </div>
+
+                    <!-- weather name -->
+                    <p data-weatherDesc></p>
+
+                    <!-- weather icon -->
+                    <img data-weatherIcon>
+
+                    <!-- current temp -->
+                    <p data-temp ></p>
+
+
+
+                    <!-- WINDSPEED , humidity , clouds percentage -->
+                    <div>
+
+
+                        <!-- WINDSPEED card-->
+                        <div>
+                            <img src="/assets/wind.png" >
+                            <p>WINDSPEED</p>
+                            <p data-windspeed></p>
+                        </div>
+    
+                        <!-- humidity card-->
+                        <div>
+                            <img src="/assets/humidity.png" >
+                            <p >HUMIDITY</p>
+                            <p data-humidity></p>
+                        </div>
+    
+                        <!-- clouds card -->
+                        <div>
+                            <img src="/assets/cloud.png" >
+                            <p>CLOUDS</p>
+                            <p data-clouds></p>
+                        </div>
+    
+                     </div>
+
+
+                 </div>
+
+                 
+
+                 
+
+
+
+                 
+              
+
+
+
+    </div>
+
+
+
+
+
+
 
         
 
-        <div>
-            <div>
-                <img src="assets/wind.png">
-                <p>WINDSPEED</p>
-                <p></p>
-            </div>
-            <div>
-                <img src="assets/humidity.png">
-                <p>HUMIDITY</p>
-                <p></p>
-            </div>
-            <div>
-                <img src="assets/cloud.png">
-                <p>CLOUDS</p>
-                <p></p>
-            </div>
+    
 
-        </div>
 
-        
 
-    </div> -->
+
+
+
+
+
+
+
+
+
+
+
 
 
 
