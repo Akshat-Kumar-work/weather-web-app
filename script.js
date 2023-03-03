@@ -1,4 +1,112 @@
-console.log("js script is started succesfully");
+//fetching elements
+const userTab = document.querySelector("[data-userWeather]");
+const searchTab = document.querySelector("[data-searchWeather]");
+const userContainer = document.querySelector(".weather-container");
+const grantAccessContainer = document.querySelector(".grant-location-container");
+const searchForm = document.querySelector("[data-searchform]");
+const loadingScreen = document.querySelector(".loading-container");
+const userInfoContainer = document.querySelector(".user-info-container");
+
+//initials variables
+const API_KEY = "a2c7be6a546f5dd34379dc42dddda488";
+let currentTab = userTab;
+currentTab.classList.add("current-tab"); 
+ 
+
+
+//this function switches the tab
+function switchTab(clickedTab){
+    //agar clicked tab current tab nahi hai toh karo
+    if(clickedTab != currentTab ){
+       // bhai phle class hta do jisme prop hai current tab vali
+        currentTab.classList.remove("current-tab");
+        //current tab ko clicked tab k equal krdo
+        currentTab = clickedTab;
+        //aur ab jo prop htai thi vo vapis dedo
+        currentTab.classList.add("current-tab");
+    }
+}
+
+//event listener lga rhe hai user tab par taki click karne par switch tab vala function call ho sake
+userTab.addEventListener("click",()=>{
+    //on click pass the usertab tab input
+    switchTab(userTab);
+});
+
+//event listener lga rhe hai search tab par taki click karne par switch tab vala function call ho sake
+searchTab.addEventListener("click", ()=>{
+    //on click pass the searchtab input
+    switchTab(searchTab);
+})
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ /*console.log("js script is started succesfully");
 
 const API_KEY = "a2c7be6a546f5dd34379dc42dddda488";
 
@@ -87,4 +195,4 @@ function switchTab(clickedTab){
     else {
         console.log("No geoLocation Support");
     }
-  }
+  }*/
