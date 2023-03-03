@@ -9,21 +9,42 @@ const userInfoContainer = document.querySelector(".user-info-container");
 
 //initials variables
 const API_KEY = "a2c7be6a546f5dd34379dc42dddda488";
-let currentTab = userTab;
-currentTab.classList.add("current-tab"); 
+let oldTab = userTab;
+oldTab.classList.add("current-tab"); 
  
 
 
 //this function switches the tab
-function switchTab(clickedTab){
+function switchTab(newTab){
+
     //agar clicked tab current tab nahi hai toh karo
-    if(clickedTab != currentTab ){
+    if(newTab != oldTab ){
        // bhai phle class hta do jisme prop hai current tab vali
-        currentTab.classList.remove("current-tab");
+        oldTab.classList.remove("current-tab");
         //current tab ko clicked tab k equal krdo
-        currentTab = clickedTab;
+        oldTab = newTab;
         //aur ab jo prop htai thi vo vapis dedo
-        currentTab.classList.add("current-tab");
+        oldTab.classList.add("current-tab");
+    }
+
+    //agar search form k andar active class nahi hai toh active class eske andar dalo
+    if(!searchForm.classList.contains("active")){
+        //userinfocontainer m se hta do active class
+        userInfoContainer.classList.remove("active");
+        //grantAcessContainer m se bhi htao active class
+        grantAccessContainer.classList.remove("active");
+        //searchform m add kardo active class
+        searchForm.classList.add("active");
+    }
+
+    //mie phle search vale tab par tha ab your weather vala visible karna hai
+    else{
+        //search form sy active class hta do 
+        searchForm.classList.remove("active");
+        //user weather info sy bhi htado bhai
+        userInfoContainer.classList.remove("active");
+        //ab mai your weather tab me agya hu , toh weather bhi display karna pdega , toh check karo local storage for coordinates kya hamare pass hai ya nai unke hisab se weather show kardena bhai
+        getfromSessionStorage(); 
     }
 }
 
@@ -37,7 +58,65 @@ userTab.addEventListener("click",()=>{
 searchTab.addEventListener("click", ()=>{
     //on click pass the searchtab input
     switchTab(searchTab);
-})
+});
+
+
+//y check karta hai ki coordinates hai hmare pass ya nahi
+function getfromSessionStorage(){   //sessionStorage hume allow karta hai data store karne ko 
+    const localCoordinates = sessionStorage.getItem("user-coordinates"); //sessionStorage.getItems check karta hai kya user-coordinates naam ki koi chiz hai sessionStorage m agar hai toh localCoordinates m vo ajaegi
+
+    //agar local coordinates nai mile toh humne location ka access nahi dia 
+    if(!localCoordinates){
+
+        //toh grant access vali ko visible krwao active class add karke
+        grantAccessContainer.classList.add("active");
+
+    }
+
+    //agar local coordinates pade hue hai
+    else{
+        //un coordinates ko JSON format m convert karke coordiantes naam k variable m daldo
+        const coordinates = JSON.parse(localCoordinates);
+        //aur fetchUserWeatherInfo function ko call kardia 
+        fetchUserWeatherInfo (coordinates);
+    }
+}
+
+
+//API call kar rahe hai weathe ki information k liye latitude aur longitude ki value use karke
+async function fetchUserWeatherInfo (coordiantes){
+    //coordinates vale variable m se lati aur longi nikalo 
+    const {latitude , longitude} = coordiantes;
+    //hmare pass coordinates hai toh grant location access vale ko hta do 
+    grantAccessContainer.classList.remove("active");
+    //loader vale ko dikha do
+    loadingScreen.classList.add("acitve");
+
+    //api ko call kar rhe hai
+    try{
+        //jo api call karke result aya hai usko response m dal dia
+        const response = await fetch (`https:api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`);
+        //ab response ko json format m convert kardo
+        const data = await response.json();
+        //ab hmare pass data agya hai toh loading screen ko htao bhai data bhi dkhna hai
+        loadingScreen.classList.remove("active");
+        //ab weather ki info dkhne k lie user info container ko visible toh krwao
+        userInfoContainer.classList.add("active");
+        //jo weather info visible krwaya hai uske andar values bhi toh dalni hai toh renderWeatherInfo ko call karde bhai
+        renderWeatherInfo(data);
+
+    }
+    catch(err){
+        loadingScreen.classList.remove("active");
+        console.log("error hai bhai", err);
+    }
+
+}
+
+//jo bhi data mila hai api se , vo weather info k andar dalta hai
+function renderWeatherInfo (){
+    
+}
  
  
  
@@ -170,15 +249,15 @@ async function getWeatherDetailsByLATandLONG(){
  
 
 
-function switchTab(clickedTab){
+function switchTab(newTab){
     
-    if(clickedTab !== currentTab){
+    if(newTab !== oldTab){
         //remove all css properties from current tab
-        currentTab.classList.remove("current-tab");
+        oldTab.classList.remove("current-tab");
         //put current tab equal to clicked tab
-        currentTab = clickedTab ;
+        oldTab = newTab ;
         //add all properties of currentab
-        currentTab.classList.add("current-tab");
+        oldTab.classList.add("current-tab");
     }
 }
 
