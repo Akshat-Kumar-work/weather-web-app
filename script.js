@@ -63,7 +63,7 @@ searchTab.addEventListener("click", ()=>{
 
 //y check karta hai ki coordinates hai hmare pass ya nahi
 function getfromSessionStorage(){   //sessionStorage hume allow karta hai data store karne ko 
-    const localCoordinates = sessionStorage.getItem("user-coordinates"); //sessionStorage.getItems check karta hai kya user-coordinates naam ki koi chiz hai sessionStorage m agar hai toh localCoordinates m vo ajaegi
+    const localCoordinates = sessionStorage.getItem("user-Coordinates"); //sessionStorage.getItems check karta hai kya user-coordinates naam ki koi chiz hai sessionStorage m agar hai toh localCoordinates m vo ajaegi
     
     //agar local coordinates nai mile toh humne location ka access nahi dia 
     if(!localCoordinates){
@@ -83,7 +83,7 @@ function getfromSessionStorage(){   //sessionStorage hume allow karta hai data s
 }
 
 
-//API call kar rahe hai weathe ki information k liye latitude aur longitude ki value use karke
+//API call kar rahe hai weather ki information k liye latitude aur longitude ki value use karke
 async function fetchUserWeatherInfo (coordiantes){
     //coordinates vale variable m se lati aur longi nikalo 
     const {latitude , longitude} = coordiantes;
@@ -139,25 +139,30 @@ function renderWeatherInfo (data){
 }
 
 
-//location miljaegi es sy
+//y function current location nikalta hai showposition function ki help sy , show position latitude aur longitude deta hai user ka
 function getLocation (){
-    if(navigator.geolocation) { //it give access to location of devices
-        navigator.geolocation.getCurrentPosition(showPosition);
+    //agar geolocation support available hai toh location nikalo user ki
+    if(navigator.geolocation) { //it give access to location of devices , calling geo location API
+        navigator.geolocation.getCurrentPosition(showPosition); 
     }
+    //agar support available nahi hai toh 
     else {
         console.log("No geoLocation Support");
+        alert("No geoLocation Support available!");
     }
 }
  
-//it give latitude and longitude of function
-function showPosition(){
+//it give latitude and longitude of user
+function showPosition(position){
 
-    const userCoordinates ={
-        lat: position.coords.latitude,
-        lon: position.coords.longitude,
+    const userCoordinates ={  //userCoordinates naam ka object
+        lat: position.coords.latitude, //to get  coordinates of latitudes
+        lon: position.coords.longitude, //to get coordinates of longitudes
     }
 
-    sessionStorage.setItem("user-coordinates",JSON.stringify(userCoordinates));
+    //jo sessionStorage hai uske andar user-Coordinates naam se save karlo coordinates jo humne uppr nikale hai 
+    sessionStorage.setItem("user-Coordinates",JSON.stringify(userCoordinates)); //converting userCoordinates name object into json string
+    //user interface m dikhane k lie fetchUserWeatherInfo vale function m coordinates pass kardo bhai
     fetchUserWeatherInfo(userCoordinates);
 }
 
@@ -166,15 +171,49 @@ function showPosition(){
  const grantAccessButton = doucment.querySelector("[data-grantAccess]");
  grantAccessButton.addEventListener("click",getLocation());
   
+
+//for search weather tab, city name use karke info nikalne k lie jo name input m lia hai usko fetch kar rahe hai 
 const searchInput = document.querySelector("[data-searchInput]");
 
+//search form k uppr event listener lgao ki jab submit karee toh 
 searchForm.addEventListener("submit",(e)=>{
-    e.preventDefault();
+    e.preventDefault(); //defalt method ko htado
     let cityName = searchInput.ariaValueMax;
-
+//agar city name empty hai toh bhai return hoja 
+    if(cityName == ""){
+    return;
+    }
+    //aur agar city name empty nai hai toh es function m jo api call karta hi city name ko pass krdo
+    else{
+        fetchSearchWeatherInfo(cityName);
+    }
     
 })
  
+ async function fetchSearchWeatherInfo(city){
+    //loading screen ko active kardo
+    loadingScreen.classList.add("active");
+    //purane vale user info ko hide krdo
+        userInfoContainer.classList.remove("active");
+        //access grant karne wale container ko bhi hide krdo isme city k name se weather nikalty hai
+        grantAccessContainer.classList.remove("active");
+
+    try{
+        
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`); //calling API
+        const data = await response.json(); //jo bhi response mila hai api sy usko json format m convert krdo
+        //loading screen ko htado info agyi hai
+        loadingScreen.classList.remove("active");
+        //user container jisme weather ki info dikhegi aur store hogi usko visible karwado 
+        userInfoContainer.classList.add("active");
+        //user info container m daldo values  jo mili hai 
+        renderWeatherInfo(data);
+    }
+    catch(err){
+
+    }
+  
+}
  
  
  
