@@ -64,7 +64,7 @@ searchTab.addEventListener("click", ()=>{
 //y check karta hai ki coordinates hai hmare pass ya nahi
 function getfromSessionStorage(){   //sessionStorage hume allow karta hai data store karne ko 
     const localCoordinates = sessionStorage.getItem("user-coordinates"); //sessionStorage.getItems check karta hai kya user-coordinates naam ki koi chiz hai sessionStorage m agar hai toh localCoordinates m vo ajaegi
-
+    
     //agar local coordinates nai mile toh humne location ka access nahi dia 
     if(!localCoordinates){
 
@@ -75,7 +75,7 @@ function getfromSessionStorage(){   //sessionStorage hume allow karta hai data s
 
     //agar local coordinates pade hue hai
     else{
-        //un coordinates ko JSON format m convert karke coordiantes naam k variable m daldo
+        //jo data coordinates, web serever sy mile hai vo json string form m hoty hai unko json object bnane k lie json parse kia 
         const coordinates = JSON.parse(localCoordinates);
         //aur fetchUserWeatherInfo function ko call kardia 
         fetchUserWeatherInfo (coordinates);
@@ -113,12 +113,67 @@ async function fetchUserWeatherInfo (coordiantes){
 
 }
 
-//jo bhi data mila hai api se , vo weather info k andar dalta hai
-function renderWeatherInfo (){
-    
+//jo bhi data mila hai API se , vo weather info k andar dalna hai
+function renderWeatherInfo (data){
+    //hum sbse phle elements ko fetch karnegy
+    const cityName = document.querySelector("[data-cityName]");
+    const countryIcon = document.querySelector("[data-countryIcon]");
+    const desc = doucment.querySelector("[data-weatherDesc]");
+    const weatherIcon= doucment.querySelector("[data-weatherIcon]");
+    const temp= doucment.querySelector("[data-temp]");
+    const windSpeed= doucment.querySelector("[data-windspeed]");
+    const humidity= doucment.querySelector("[data-humidity]");
+    const clouds= doucment.querySelector("[data-clouds]");
+
+    //fetch values from weatherinfo object and put in ui elements
+    //kisi json object k andar agar hum kisi propertie aur parameter ko access krna chahty hai toh hum optional chaining operator (?) se karskty hai
+    //aur agar vo property aur parameter exist nahi karta toh optional chaining operator (?) undefined value dedega  
+    cityName.innerText = data?.name;
+    countryIcon.src = `https://flagcdn.com/144x108/${data?.sys?.country.toLowerCase()}.png`;
+    desc.innerText = weatherInfo?.weather?.[0]?.description;
+    weatherIcon.src = `http://openweathermap.org/img/w/${data?.weather?.[0]?.icon}.png`;
+    temp.innerText = data?.main?.temp;
+    windSpeed.innertext = data?.wind?.speed;
+    humidity.innertext = data?.main?.humidity;
+    clouds.innerText = data?.clouds?.all;
+}
+
+
+//location miljaegi es sy
+function getLocation (){
+    if(navigator.geolocation) { //it give access to location of devices
+        navigator.geolocation.getCurrentPosition(showPosition);
+    }
+    else {
+        console.log("No geoLocation Support");
+    }
 }
  
- 
+//it give latitude and longitude of function
+function showPosition(){
+
+    const userCoordinates ={
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+    }
+
+    sessionStorage.setItem("user-coordinates",JSON.stringify(userCoordinates));
+    fetchUserWeatherInfo(userCoordinates);
+}
+
+
+ //grant access button
+ const grantAccessButton = doucment.querySelector("[data-grantAccess]");
+ grantAccessButton.addEventListener("click",getLocation());
+  
+const searchInput = document.querySelector("[data-searchInput]");
+
+searchForm.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    let cityName = searchInput.ariaValueMax;
+
+    
+})
  
  
  
