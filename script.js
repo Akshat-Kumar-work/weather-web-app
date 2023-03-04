@@ -11,6 +11,7 @@ const userInfoContainer = document.querySelector(".user-info-container");
 const API_KEY = "a2c7be6a546f5dd34379dc42dddda488";
 let oldTab = userTab;
 oldTab.classList.add("current-tab"); 
+getfromSessionStorage(); //calling this function to check if lat or long is present previously or not 
  
 
 
@@ -25,7 +26,7 @@ function switchTab(newTab){
         oldTab = newTab;
         //aur ab jo prop htai thi vo vapis dedo
         oldTab.classList.add("current-tab");
-    }
+    
 
     //agar search form k andar active class nahi hai toh active class eske andar dalo
     if(!searchForm.classList.contains("active")){
@@ -37,7 +38,7 @@ function switchTab(newTab){
         searchForm.classList.add("active");
     }
 
-    //mie phle search vale tab par tha ab your weather vala visible karna hai
+    //hum phle search vale tab par tha ab your weather vala visible karna hai
     else{
         //search form sy active class hta do 
         searchForm.classList.remove("active");
@@ -46,6 +47,7 @@ function switchTab(newTab){
         //ab mai your weather tab me agya hu , toh weather bhi display karna pdega , toh check karo local storage for coordinates kya hamare pass hai ya nai unke hisab se weather show kardena bhai
         getfromSessionStorage(); 
     }
+}
 }
 
 //event listener lga rhe hai user tab par taki click karne par switch tab vala function call ho sake
@@ -63,7 +65,7 @@ searchTab.addEventListener("click", ()=>{
 
 //y check karta hai ki coordinates hai hmare pass ya nahi
 function getfromSessionStorage(){   //sessionStorage hume allow karta hai data store karne ko 
-    const localCoordinates = sessionStorage.getItem("user-Coordinates"); //sessionStorage.getItems check karta hai kya user-coordinates naam ki koi chiz hai sessionStorage m agar hai toh localCoordinates m vo ajaegi
+    const localCoordinates = sessionStorage.getItem("user-coordinates"); //sessionStorage.getItems check karta hai kya user-coordinates naam ki koi chiz hai sessionStorage m agar hai toh localCoordinates m vo ajaegi
     
     //agar local coordinates nai mile toh humne location ka access nahi dia 
     if(!localCoordinates){
@@ -84,9 +86,9 @@ function getfromSessionStorage(){   //sessionStorage hume allow karta hai data s
 
 
 //API call kar rahe hai weather ki information k liye latitude aur longitude ki value use karke
-async function fetchUserWeatherInfo (coordiantes){
+async function fetchUserWeatherInfo (coordinates){
     //coordinates vale variable m se lati aur longi nikalo 
-    const {latitude , longitude} = coordiantes;
+    const {lat , lon} = coordinates;
     //hmare pass coordinates hai toh grant location access vale ko hta do 
     grantAccessContainer.classList.remove("active");
     //loader vale ko dikha do
@@ -95,7 +97,7 @@ async function fetchUserWeatherInfo (coordiantes){
     //api ko call kar rhe hai
     try{
         //jo api call karke result aya hai usko response m dal dia
-        const response = await fetch (`https:api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
         //ab response ko json format m convert kardo
         const data = await response.json();
         //ab hmare pass data agya hai toh loading screen ko htao bhai data bhi dkhna hai
@@ -108,34 +110,36 @@ async function fetchUserWeatherInfo (coordiantes){
     }
     catch(err){
         loadingScreen.classList.remove("active");
-        console.log("error hai bhai", err);
+        console.log("error hai bhai",err);
+       alert("access nahi mila");
+        
     }
 
 }
 
 //jo bhi data mila hai API se , vo weather info k andar dalna hai
-function renderWeatherInfo (data){
+function renderWeatherInfo (weatherInfo){
     //hum sbse phle elements ko fetch karnegy
     const cityName = document.querySelector("[data-cityName]");
     const countryIcon = document.querySelector("[data-countryIcon]");
-    const desc = doucment.querySelector("[data-weatherDesc]");
-    const weatherIcon= doucment.querySelector("[data-weatherIcon]");
-    const temp= doucment.querySelector("[data-temp]");
-    const windSpeed= doucment.querySelector("[data-windspeed]");
-    const humidity= doucment.querySelector("[data-humidity]");
-    const clouds= doucment.querySelector("[data-clouds]");
+    const desc = document.querySelector("[data-weatherDesc]");
+    const weatherIcon= document.querySelector("[data-weatherDesc]");
+    const temp= document.querySelector("[data-temp]");
+    const windSpeed= document.querySelector("[data-windspeed]");
+    const humidity= document.querySelector("[data-humidity]");
+    const clouds= document.querySelector("[data-clouds]");
 
     //fetch values from weatherinfo object and put in ui elements
     //kisi json object k andar agar hum kisi propertie aur parameter ko access krna chahty hai toh hum optional chaining operator (?) se karskty hai
     //aur agar vo property aur parameter exist nahi karta toh optional chaining operator (?) undefined value dedega  
-    cityName.innerText = data?.name;
-    countryIcon.src = `https://flagcdn.com/144x108/${data?.sys?.country.toLowerCase()}.png`;
+    cityName.innerText = weatherInfo?.name;
+    countryIcon.src = `https://flagcdn.com/144x108/${weatherInfo?.sys?.country.toLowerCase()}.png`;
     desc.innerText = weatherInfo?.weather?.[0]?.description;
-    weatherIcon.src = `http://openweathermap.org/img/w/${data?.weather?.[0]?.icon}.png`;
-    temp.innerText = data?.main?.temp;
-    windSpeed.innertext = data?.wind?.speed;
-    humidity.innertext = data?.main?.humidity;
-    clouds.innerText = data?.clouds?.all;
+    weatherIcon.src = `http://openweathermap.org/img/w/${weatherInfo?.weather?.[0]?.icon}.png`;
+    temp.innerText = weatherInfo?.main?.temp;
+    windSpeed.innertext = weatherInfo?.wind?.speed;
+    humidity.innertext = weatherInfo?.main?.humidity;
+    clouds.innerText = weatherInfo?.clouds?.all;
 }
 
 
@@ -161,14 +165,14 @@ function showPosition(position){
     }
 
     //jo sessionStorage hai uske andar user-Coordinates naam se save karlo coordinates jo humne uppr nikale hai 
-    sessionStorage.setItem("user-Coordinates",JSON.stringify(userCoordinates)); //converting userCoordinates name object into json string
+    sessionStorage.setItem("user-coordinates",JSON.stringify(userCoordinates)); //converting userCoordinates name object into json string
     //user interface m dikhane k lie fetchUserWeatherInfo vale function m coordinates pass kardo bhai
     fetchUserWeatherInfo(userCoordinates);
 }
 
 
  //grant access button
- const grantAccessButton = doucment.querySelector("[data-grantAccess]");
+ const grantAccessButton = document.querySelector("[data-grantAccess]");
  grantAccessButton.addEventListener("click",getLocation());
   
 
@@ -178,7 +182,7 @@ const searchInput = document.querySelector("[data-searchInput]");
 //search form k uppr event listener lgao ki jab submit karee toh 
 searchForm.addEventListener("submit",(e)=>{
     e.preventDefault(); //defalt method ko htado
-    let cityName = searchInput.ariaValueMax;
+    let cityName = searchInput.value; //it will return the value of searchInput varible 
 //agar city name empty hai toh bhai return hoja 
     if(cityName == ""){
     return;
@@ -210,6 +214,8 @@ searchForm.addEventListener("submit",(e)=>{
         renderWeatherInfo(data);
     }
     catch(err){
+        alert("city doesn't exist ")
+        alert(err);
 
     }
   
