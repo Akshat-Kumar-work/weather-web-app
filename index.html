@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="wrapper">
@@ -25,10 +28,10 @@
             <div class="weather-container" >  
 
                 <!-- grant location access container -->
-                <div class="grant-location-container">
+                <div class="sub-container grant-location-container">
                     <img src="./assets/location.png" alt="" width="80" height="80" loading="lazy">
                     <p>Grant Location Access</p>
-                    <p>Allow Access to get weather Inforamtioin </p>
+                    <p>Allow Access to get weather Information </p>
                     <button class="btn"  data-grantAccess >Grant Access</button>
                 </div>
 
@@ -38,14 +41,14 @@
 
                 <form class="form-container" data-searchform>
                 <input type="text" placeholder="Search for City..." data-searchInput>
-                 <button type="submit"><img src="assets/search.png" width="20" height="20" loading="lazy"> </button>
+                 <button  class=" butn"type="submit"><img src="assets/search.png" width="20" height="20" loading="lazy"> </button>
 
                 </form>
 
 
                 <!-- loading screen container -->
 
-                <div class="loading-container">
+                <div class="loading-container sub-container">
                     <img src="assets/loading.gif" width="150" height="150" alt="">
                     <p>Loading</p>
                 </div>
@@ -53,7 +56,7 @@
                 
 
                 <!-- show weather info -->
-                 <div class="user-info-container">
+                 <div class="user-info-container sub-container">
 
 
                     <!-- city name and flag -->
@@ -74,25 +77,25 @@
 
 
                     <!-- WINDSPEED , humidity , clouds percentage -->
-                    <div>
+                    <div class="parameter-container">
 
 
                         <!-- WINDSPEED card-->
-                        <div>
+                        <div class="parameter">
                             <img src="/assets/wind.png" >
                             <p>WINDSPEED</p>
                             <p data-windspeed></p>
                         </div>
     
                         <!-- humidity card-->
-                        <div>
+                        <div class="parameter">
                             <img src="/assets/humidity.png" >
                             <p >HUMIDITY</p>
                             <p data-humidity></p>
                         </div>
     
                         <!-- clouds card -->
-                        <div>
+                        <div class="parameter">
                             <img src="/assets/cloud.png" >
                             <p>CLOUDS</p>
                             <p data-clouds></p>
