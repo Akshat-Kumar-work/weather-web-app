@@ -123,7 +123,8 @@ function renderWeatherInfo (weatherInfo){
     const cityName = document.querySelector("[data-cityName]");
     const countryIcon = document.querySelector("[data-countryIcon]");
     const desc = document.querySelector("[data-weatherDesc]");
-    const weatherIcon= document.querySelector("[data-weatherDesc]");
+    const weatherIcon= document.querySelector("[data-weatherIcon]");
+    console.log("weather icon chlra hai")
     const temp= document.querySelector("[data-temp]");
     const windSpeed= document.querySelector("[data-windspeed]");
     const humidity= document.querySelector("[data-humidity]");
