@@ -6,6 +6,7 @@ const grantAccessContainer = document.querySelector(".grant-location-container")
 const searchForm = document.querySelector("[data-searchform]");
 const loadingScreen = document.querySelector(".loading-container");
 const userInfoContainer = document.querySelector(".user-info-container");
+const notfound = document.querySelector("[noCityimg]");
 
 //initials variables
 const API_KEY = "a2c7be6a546f5dd34379dc42dddda488";
@@ -18,7 +19,7 @@ getfromSessionStorage(); //calling this function to check if lat or long is pres
 //this function switches the tab
 function switchTab(newTab){
 
-    //agar clicked tab current tab nahi hai toh karo
+    //agar clicked tab old tab nahi hai toh 
     if(newTab != oldTab ){
        // bhai phle class hta do jisme prop hai current tab vali
         oldTab.classList.remove("current-tab");
@@ -36,16 +37,22 @@ function switchTab(newTab){
         grantAccessContainer.classList.remove("active");
         //searchform m add kardo active class
         searchForm.classList.add("active");
+        //not found vali img hta do 
+        notfound.classList.remove("dikhado");
     }
 
     //hum phle search vale tab par tha ab your weather vala visible karna hai
     else{
+        //not found vali img hta do 
+    notfound.classList.remove("dikhado");
         //search form sy active class hta do 
         searchForm.classList.remove("active");
         //user weather info sy bhi htado bhai
         userInfoContainer.classList.remove("active");
         //ab mai your weather tab me agya hu , toh weather bhi display karna pdega , toh check karo local storage for coordinates kya hamare pass hai ya nai unke hisab se weather show kardena bhai
         getfromSessionStorage(); 
+        //not found vali img hta do 
+        notfound.classList.remove("dikhado");
     }
 }
 }
@@ -85,15 +92,17 @@ function getfromSessionStorage(){   //sessionStorage hume allow karta hai data s
 }
 
 
-//API call kar rahe hai weather ki information k liye latitude aur longitude ki value use karke
+//API call kar rahe hai weather ki information k liye latitude aur longitude ki value use karke, your weather vale tab k lie 
 async function fetchUserWeatherInfo (coordinates){
     //coordinates vale variable m se lati aur longi nikalo 
     const {lat , lon} = coordinates;
+    //not found vali img hta do 
+    notfound.classList.remove("dikhado");
     //hmare pass coordinates hai toh grant location access vale ko hta do 
     grantAccessContainer.classList.remove("active");
     //loader vale ko dikha do
     loadingScreen.classList.add("acitve");
-
+    
     //api ko call kar rhe hai
     try{
         //jo api call karke result aya hai usko response m dal dia
@@ -106,7 +115,6 @@ async function fetchUserWeatherInfo (coordinates){
         userInfoContainer.classList.add("active");
         //jo weather info visible krwaya hai uske andar values bhi toh dalni hai toh renderWeatherInfo ko call karde bhai
         renderWeatherInfo(data);
-
     }
     catch(err){
         loadingScreen.classList.remove("active");
@@ -175,10 +183,11 @@ function showPosition(position){
  //grant access button
  const grantAccessButton = document.querySelector("[data-grantAccess]");
  grantAccessButton.addEventListener("click",getLocation());
-  
+ 
 
 //for search weather tab, city name use karke info nikalne k lie jo name input m lia hai usko fetch kar rahe hai 
 const searchInput = document.querySelector("[data-searchInput]");
+
 
 //search form k uppr event listener lgao ki jab submit karee toh 
 searchForm.addEventListener("submit",(e)=>{
@@ -195,6 +204,7 @@ searchForm.addEventListener("submit",(e)=>{
     
 })
  
+/* search weather vale tab k liye api call*/
  async function fetchSearchWeatherInfo(city){
     //loading screen ko active kardo
     loadingScreen.classList.add("active");
@@ -207,21 +217,38 @@ searchForm.addEventListener("submit",(e)=>{
         
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`); //calling API
         const data = await response.json(); //jo bhi response mila hai api sy usko json format m convert krdo
+        console.log(data);
         //loading screen ko htado info agyi hai
         loadingScreen.classList.remove("active");
+        notfound.classList.remove("dikhado");
         //user container jisme weather ki info dikhegi aur store hogi usko visible karwado 
         userInfoContainer.classList.add("active");
-        //user info container m daldo values  jo mili hai 
-        renderWeatherInfo(data);
-    }
-    catch(err){
-        alert("city doesn't exist ")
-        alert(err);
+        //user info container m daldo values  jo mili hai
+        renderWeatherInfo(data); 
 
+        //fetching code number in citynotfound variable
+        const citynotfound = data?.cod;
+
+        //using optional chaining operator , api response jo mila h , data k andar jakar agr uska code 404 hai toh bhai notfound class ko show kardo 
+        //aur userinfocontainer ko hide krdo
+        if( citynotfound == "404"){
+            notfound.classList.add("dikhado");
+            userInfoContainer.classList.remove("active");
+            searchForm.classList.remove("active");
+        }
     }
+
+    catch(err){
+        console.log("hi i am from error block");
+        alert("city doesn't exist")
+        alert(err);
+        
+    }
+   
   
 }
  
+
  
  
  

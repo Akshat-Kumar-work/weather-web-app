@@ -208,3 +208,25 @@ h1{
     width: 40px;
     height: 40px;
 }
+
+.not-found{
+    display: none;
+}
+
+.dikhado{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 500px;
+}
+
+/*jyda sy jyda 500px tak kaam kregi us se jyda agar width hui toh nai kregi*/
+@media (max-width:500px){
+
+    .not-found{
+        width: 200px;
+        height: 200px;
+    }
+
+}
